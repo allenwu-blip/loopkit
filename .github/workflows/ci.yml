@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: npm ci
+      # NO API key and NO network are required. Every generator is a pure,
+      # deterministic transform of bytes on disk; the suite statically
+      # asserts no source file imports a network/payment/LLM module and that
+      # no fetch/socket call site exists (test/no-network.test.js).
+      - run: npm test
+
+  smoke:
+    # Exercise the CLI exactly as a user would, on a throwaway fixture repo,
+    # with a deliberately minimal environment (no secrets configured). Proves
+    # the four commands produce real artifacts and that loopkit refuses to
+    # invent inputs (exit 1) on an empty repo.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: landing/launch/checklist produce real artifacts; empty repo is refused
+        run: |
+          set -e
+          R="$(mktemp -d)"; O="$(mktemp -d)"; E="$(mktemp -d)"
+          cat > "$R/package.json" <<'EOF'
+          { "name": "smoketool", "version": "1.0.0", "description": "A tiny smoke-test tool.", "license": "MIT" }
+          EOF
+          cat > "$R/README.md" <<'EOF'
+          # smoketool
+          A tiny smoke-test tool.
+          ## Features
+          - does one thing
+          ## Limitations
+          - does only that one thing
+          EOF
+          node bin/loopkit.js landing   --repo "$R" --out "$O"
+          node bin/loopkit.js launch    --repo "$R" --out "$O"
+          node bin/loopkit.js checklist --repo "$R" --out "$O"
+          test -f "$O/index.html"
+          test -f "$O/launch/show-hn.draft.md"
+          test -f "$O/DISTRIBUTION-CHECKLIST.md"
+          test -f "$O/payments/INTEGRATION.md"
+          grep -q "loopkit DRAFT" "$O/launch/show-hn.draft.md"
+          grep -q "does one thing" "$O/launch/show-hn.draft.md"   # restated my own README
+          ! grep -qi "blazing\|revolutionary\|10x" "$O/launch/show-hn.draft.md"  # invented nothing
+          grep -q "zero payment code" "$O/payments/INTEGRATION.md"
+          # an empty repo must be REFUSED (exit 1), never a fabricated artifact
+          if node bin/loopkit.js landing --repo "$E" --out "$E/out"; then
+            echo "expected exit 1 on an empty repo (loopkit must not invent inputs)"; exit 1
+          fi
+          # track is local-only and records exactly what I typed
+          node bin/loopkit.js track add stars 5 "smoke" --out "$O/t.tsv"
+          node bin/loopkit.js track --out "$O/t.tsv" | grep -q "loopkit fetched nothing"
+          echo "smoke OK"

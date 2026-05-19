@@ -1,0 +1,10 @@
+{
+  "name": "snapdiff",
+  "version": "1.2.0",
+  "description": "A zero-config visual diff for your terminal screenshots.",
+  "license": "MIT",
+  "bin": { "snapdiff": "bin/snapdiff.js" },
+  "keywords": ["screenshots", "diff", "terminal", "cli"],
+  "repository": { "type": "git", "url": "git+https://github.com/exampleuser/snapdiff.git" },
+  "homepage": "https://github.com/exampleuser/snapdiff#readme"
+}

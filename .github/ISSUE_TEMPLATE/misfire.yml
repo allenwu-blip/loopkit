@@ -1,0 +1,60 @@
+name: "loopkit misfire report"
+description: "Report loopkit inventing something, overstepping its boundary, shipping a missable placeholder, emitting payment code, or producing non-deterministic / wrong output. Captured verbatim and read exactly as written."
+title: "[misfire] "
+labels: ["loopkit-feedback"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. loopkit's whole promise is "it does the
+        mechanical loop and overclaims nothing". A misfire against that is
+        the most useful input there is. **Your description is stored and
+        read exactly as you write it — it is not summarized or paraphrased.**
+        Be as blunt as you like.
+  - type: dropdown
+    id: command
+    attributes:
+      label: Which command
+      options:
+        - landing
+        - launch
+        - checklist
+        - track
+        - "not sure / general"
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Misfire type
+      options:
+        - "Invented content — a claim/number/adjective NOT in my repo (most serious)"
+        - "Placeholder shipped silently / was too easy to miss"
+        - "Overstepped boundary — read as if it would post / judge / do growth"
+        - "Payments scaffold contained runnable payment code / a key / an endpoint"
+        - "Non-deterministic — same repo, different output across runs"
+        - "Wrong/misleading mechanical step (stale platform rule, broken link)"
+        - "Other / not sure"
+    validations:
+      required: true
+  - type: textarea
+    id: generated
+    attributes:
+      label: The generated artifact (paste the offending lines)
+      description: "The lines loopkit emitted that are wrong — from the .draft.md / index.html / checklist."
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: input
+    attributes:
+      label: The relevant input + what should have happened, in your own words
+      description: "Verbatim. The smallest slice of your README/CHANGELOG/package.json that reproduces it, and — for an invented-claim report — show the claim is NOT in your inputs. loopkit is a pure transform: input + command = a deterministic repro."
+      placeholder: "launch put 'blazing fast' in the Show HN draft but my README never says that anywhere — grep '-i blazing README.md' is empty…"
+    validations:
+      required: true
+  - type: input
+    id: invocation
+    attributes:
+      label: Your loopkit invocation / version, if non-default
+      placeholder: "npx loopkit launch --repo . --stdout, v0.1.0"

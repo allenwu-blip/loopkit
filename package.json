@@ -1,0 +1,40 @@
+{
+  "name": "@allenwu06/loopkit",
+  "version": "0.1.0",
+  "description": "Scaffolds the post-ship distribution loop from your own repo — generates a landing page, launch-post drafts, a submission checklist, a payments scaffold, and a traction tracker as deterministic file transforms. Does the boilerplate only; no LLM, no network, no telemetry.",
+  "type": "module",
+  "license": "MIT",
+  "private": false,
+  "bin": {
+    "loopkit": "bin/loopkit.js"
+  },
+  "files": [
+    "bin",
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "loopkit": "node bin/loopkit.js"
+  },
+  "keywords": [
+    "indie-hackers",
+    "solo-dev",
+    "launch",
+    "show-hn",
+    "distribution",
+    "landing-page",
+    "changelog",
+    "traction",
+    "cli",
+    "bootstrapping"
+  ],
+  "devDependencies": {
+    "vitest": "^2.1.9"
+  }
+}

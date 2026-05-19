@@ -1,0 +1,7 @@
+node_modules/
+coverage/
+*.log
+.DS_Store
+# scratch output written while developing against this very repo
+/loopkit-out/
+/.loopkit/

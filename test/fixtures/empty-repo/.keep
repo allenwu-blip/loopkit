@@ -1,0 +1,2 @@
+This directory intentionally has no package.json and no README, to test that
+loopkit refuses to invent inputs (exit 1) rather than fabricate a project.
